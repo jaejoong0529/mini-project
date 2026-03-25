@@ -46,4 +46,11 @@ public class Product extends BaseTimeEntity {
                 .category(category)
                 .build();
     }
+
+    public void updateProduct(String productName, String description, Long price, Category category) {
+        if (productName != null) this.productName = productName;
+        if (description != null) this.description = description;
+        if (price != null) this.price = price;
+        if (category != null) this.category = category;
+    }
 }

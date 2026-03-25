@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.miniproject.product.domain.Product;
 import study.miniproject.product.dto.request.ProductCreateRequest;
+import study.miniproject.product.dto.request.ProductUpdateRequest;
 import study.miniproject.product.dto.response.ProductCreateResponse;
 import study.miniproject.product.dto.response.ProductDetailResponse;
 import study.miniproject.product.dto.response.ProductListResponse;
@@ -40,7 +41,17 @@ public class ProductService {
         return ProductDetailResponse.from(product);
     }
 
+    public void update(Long productId, ProductUpdateRequest request) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        updateProduct(product, request);
+    }
+
     private Product createProduct(ProductCreateRequest request) {
         return Product.createProduct(request.productName(), request.description(), request.price(), request.category());
+    }
+
+    private void updateProduct(Product product, ProductUpdateRequest request) {
+        product.updateProduct(request.productName(), request.description(), request.price(), request.category());
     }
 }
