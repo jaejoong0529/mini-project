@@ -47,6 +47,12 @@ public class ProductService {
         updateProduct(product, request);
     }
 
+    public void delete(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        productRepository.delete(product);
+    }
+
     private Product createProduct(ProductCreateRequest request) {
         return Product.createProduct(request.productName(), request.description(), request.price(), request.category());
     }

@@ -55,4 +55,12 @@ public class ProductController {
         productService.update(productId, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(
+            @PathVariable Long productId
+    ) {
+        productService.delete(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
