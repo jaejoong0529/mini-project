@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import study.miniproject.product.domain.Product;
 import study.miniproject.product.dto.request.ProductCreateRequest;
 import study.miniproject.product.dto.response.ProductCreateResponse;
+import study.miniproject.product.dto.response.ProductDetailResponse;
 import study.miniproject.product.dto.response.ProductListResponse;
+import study.miniproject.product.exception.ProductNotFoundException;
 import study.miniproject.product.repository.ProductRepository;
 
 @Slf4j
@@ -29,6 +31,13 @@ public class ProductService {
     public ProductListResponse getProducts(Pageable pageable) {
         Page<Product> page = productRepository.findAll(pageable);
         return ProductListResponse.from(page);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResponse getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        return ProductDetailResponse.from(product);
     }
 
     private Product createProduct(ProductCreateRequest request) {
