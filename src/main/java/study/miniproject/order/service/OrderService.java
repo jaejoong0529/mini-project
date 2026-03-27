@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.miniproject.order.domain.Order;
 import study.miniproject.order.dto.request.OrderCreateRequest;
 import study.miniproject.order.dto.response.OrderCreateResponse;
+import study.miniproject.order.dto.response.OrderDetailResponse;
 import study.miniproject.order.repository.OrderRepository;
 import study.miniproject.product.domain.Product;
 import study.miniproject.product.repository.ProductRepository;
@@ -28,6 +29,12 @@ public class OrderService {
 
         log.info("주문 생성 완료 - orderId: {}", savedOrder.getId());
         return OrderCreateResponse.from(savedOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDetailResponse getOrder(Long orderId) {
+        Order order = orderRepository.getByIdOrThrow(orderId);
+        return OrderDetailResponse.from(order);
     }
 
     private Order createOrder(Product product, OrderCreateRequest request) {
