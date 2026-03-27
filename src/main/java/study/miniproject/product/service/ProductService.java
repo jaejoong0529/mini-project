@@ -62,7 +62,7 @@ public class ProductService {
     }
 
     private Product createProduct(ProductCreateRequest request) {
-        return Product.createProduct(request.productName(), request.description(), request.price(), request.category());
+        return Product.createProduct(request.productName(), request.description(), request.price(), request.category(), request.stock());
     }
 
     private void updateProduct(Product product, ProductUpdateRequest request) {

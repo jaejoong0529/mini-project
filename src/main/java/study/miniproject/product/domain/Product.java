@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.miniproject.common.entity.BaseTimeEntity;
+import study.miniproject.product.exception.InvalidStockQuantityException;
+import study.miniproject.product.exception.OutOfStockException;
 
 @Entity
 @Table(name = "products")
@@ -30,20 +32,25 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(nullable = false)
+    private Integer stock;
+
     @Builder
-    public Product(String productName, String description, Long price, Category category) {
+    public Product(String productName, String description, Long price, Category category, Integer stock) {
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.category = category;
+        this.stock = stock;
     }
 
-    public static Product createProduct(String productName, String description, Long price, Category category) {
+    public static Product createProduct(String productName, String description, Long price, Category category, Integer stock) {
         return Product.builder()
                 .productName(productName)
                 .description(description)
                 .price(price)
                 .category(category)
+                .stock(stock)
                 .build();
     }
 
@@ -52,5 +59,17 @@ public class Product extends BaseTimeEntity {
         if (description != null) this.description = description;
         if (price != null) this.price = price;
         if (category != null) this.category = category;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (quantity <= 0) {
+            throw InvalidStockQuantityException.of(quantity);
+        }
+
+        if (this.stock < quantity) {
+            throw OutOfStockException.of(this.stock, quantity);
+        }
+
+        this.stock -= quantity;
     }
 }

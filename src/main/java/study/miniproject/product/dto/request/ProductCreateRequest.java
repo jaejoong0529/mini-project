@@ -20,6 +20,10 @@ public record ProductCreateRequest(
         Long price,
 
         @NotNull(message = "상품 카테고리는 필수입니다.")
-        Category category
+        Category category,
+
+        @NotNull
+        @Min(0)
+        Integer stock
 ) {
 }

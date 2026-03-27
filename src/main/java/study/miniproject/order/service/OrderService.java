@@ -27,6 +27,7 @@ public class OrderService {
         log.debug("주문 생성 시작 - productId: {}, quantity: {}", request.productId(), request.quantity());
 
         Product product = productRepository.getByIdOrThrow(request.productId());
+        product.decreaseStock(request.quantity());
         Order order = createOrder(product, request);
         Order savedOrder = orderRepository.save(order);
 
