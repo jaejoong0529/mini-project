@@ -12,7 +12,6 @@ import study.miniproject.product.dto.request.ProductUpdateRequest;
 import study.miniproject.product.dto.response.ProductCreateResponse;
 import study.miniproject.product.dto.response.ProductDetailResponse;
 import study.miniproject.product.dto.response.ProductListResponse;
-import study.miniproject.product.exception.ProductNotFoundException;
 import study.miniproject.product.repository.ProductRepository;
 
 @Slf4j
@@ -40,16 +39,14 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDetailResponse getProduct(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        Product product = productRepository.getByIdOrThrow(productId);
         return ProductDetailResponse.from(product);
     }
 
     public void update(Long productId, ProductUpdateRequest request) {
         log.debug("상품 수정 시작 - productId: {}", productId);
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        Product product = productRepository.getByIdOrThrow(productId);
         updateProduct(product, request);
 
         log.info("상품 수정 완료 - productId: {}", productId);
@@ -58,8 +55,7 @@ public class ProductService {
     public void delete(Long productId) {
         log.debug("상품 삭제 시작 - productId: {}", productId);
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> ProductNotFoundException.of(productId));
+        Product product = productRepository.getByIdOrThrow(productId);
         productRepository.delete(product);
 
         log.info("상품 삭제 완료 - productId: {}", productId);

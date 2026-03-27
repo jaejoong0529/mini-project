@@ -9,7 +9,6 @@ import study.miniproject.order.dto.request.OrderCreateRequest;
 import study.miniproject.order.dto.response.OrderCreateResponse;
 import study.miniproject.order.repository.OrderRepository;
 import study.miniproject.product.domain.Product;
-import study.miniproject.product.exception.ProductNotFoundException;
 import study.miniproject.product.repository.ProductRepository;
 
 @Slf4j
@@ -23,8 +22,7 @@ public class OrderService {
     public OrderCreateResponse create(OrderCreateRequest request) {
         log.debug("주문 생성 시작 - productId: {}, quantity: {}", request.productId(), request.quantity());
 
-        Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> ProductNotFoundException.of(request.productId()));
+        Product product = productRepository.getByIdOrThrow(request.productId());
         Order order = createOrder(product, request);
         Order savedOrder = orderRepository.save(order);
 
