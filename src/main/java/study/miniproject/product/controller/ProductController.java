@@ -2,7 +2,6 @@ package study.miniproject.product.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +31,6 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductListResponse> getProducts(
-            @ParameterObject
             @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
         ProductListResponse response = productService.getProducts(pageable);
