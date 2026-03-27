@@ -21,10 +21,14 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     public OrderCreateResponse create(OrderCreateRequest request) {
+        log.debug("주문 생성 시작 - productId: {}, quantity: {}", request.productId(), request.quantity());
+
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> ProductNotFoundException.of(request.productId()));
         Order order = createOrder(product, request);
         Order savedOrder = orderRepository.save(order);
+
+        log.info("주문 생성 완료 - orderId: {}", savedOrder.getId());
         return OrderCreateResponse.from(savedOrder);
     }
 

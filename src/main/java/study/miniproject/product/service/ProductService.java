@@ -23,8 +23,12 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public ProductCreateResponse create(ProductCreateRequest request) {
+        log.debug("상품 생성 시작 - productName: {}", request.productName());
+
         Product product = createProduct(request);
         Product savedProduct = productRepository.save(product);
+
+        log.info("상품 생성 완료 - productId: {}", savedProduct.getId());
         return new ProductCreateResponse(savedProduct.getId());
     }
 
@@ -42,15 +46,23 @@ public class ProductService {
     }
 
     public void update(Long productId, ProductUpdateRequest request) {
+        log.debug("상품 수정 시작 - productId: {}", productId);
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> ProductNotFoundException.of(productId));
         updateProduct(product, request);
+
+        log.info("상품 수정 완료 - productId: {}", productId);
     }
 
     public void delete(Long productId) {
+        log.debug("상품 삭제 시작 - productId: {}", productId);
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> ProductNotFoundException.of(productId));
         productRepository.delete(product);
+
+        log.info("상품 삭제 완료 - productId: {}", productId);
     }
 
     private Product createProduct(ProductCreateRequest request) {
